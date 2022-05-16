@@ -1,0 +1,14 @@
+{
+  "name": "__project__name",
+  "access_token": null,
+  "script_location": "sentinel/scripts/",
+  "scripts": [
+    {
+      "name": "memory_usage.sh",
+      "description": "analyse memory usage of the system"
+    }
+  ]
+
+
+
+}
