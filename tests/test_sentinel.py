@@ -20,7 +20,7 @@ def test_authentication_login_successful_response(requests_mock: Mocker):
         "access_token": 'test_access_token',
     })
     result = runner.invoke(cli.app, ['login', '--access-token', 'test_access_token'])
-    assert 'Successful' == result.stdout.strip().split(' ')[-1]
+    assert 'Successfu' == result.stdout.strip().split(' ')[-1]
 
 
 def test_authentication_login_failed_response(requests_mock: Mocker):
