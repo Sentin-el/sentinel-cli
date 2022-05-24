@@ -24,25 +24,16 @@ def login(
         access_token: str = typer.Option(
             Auth().get_access_token(),
             help=f"go to  {__host_url__}/access_keys to generate the key corresponding to this monitor",
-            prompt="Access token:\n",
+            prompt="Access token ",
         ), force: Optional[bool] = typer.Option(
             None,
-            "--forceSS",
+            "--force",
             "-f",
             help="Clear the pre-fetched access_token",
 
         )
 ) -> None:
-    with Loader("Authorizing...", "\n", 0.05) as l:
-        login_ret = Auth().login(access_token, force)
-    print(login_ret)
-    if login_ret:
-        typer.secho(
-            f'login failed with "{ERRORS[login_ret]}"',
-            fg=typer.colors.RED,
-        )
-
-    return
+    Auth().login(access_token, force)
 
 
 def _version_callback(value: bool) -> None:

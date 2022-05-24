@@ -4,3 +4,4 @@ DISK=$(df -h | awk '$NF=="/"{printf "%s\t\t", $5}')
 CPU=$(top -bn1 | grep load | awk '{printf "%.2f%%\t\t\n", $(NF-2)}')
 echo "{\"memory\":$MEMORY,\"disk\":$DISK,\"cpu\":$CPU}"
 
+#curl

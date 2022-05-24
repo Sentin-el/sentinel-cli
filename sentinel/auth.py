@@ -10,11 +10,12 @@ from . import (
     DB_WRITE_ERROR,
     JSON_ERROR,
     AUTHORIZATION_ERROR,
-    __host_url__
+    __host_url__, ERRORS
 )
 import requests
 
 from .utils.decorators import manage_warnings
+from .utils.loader import Loader
 
 
 class AuthMetaClass(type):
@@ -39,20 +40,30 @@ class Auth(metaclass=AuthMetaClass):
 
     @manage_warnings
     def login(self, access_token: str, force=False) -> int:
-        if (not self.auth_token) or force:
-            response = requests.post(self.url, data={'access_token': access_token, })
-            if response.status_code == 200:
-                # self.put_access_token(response.body.access_token)
-                self.auth_token = response.body.access_token
-                return SUCCESS
-            else:
-                return 10
+        with Loader("Authorizing...", "\n", 0.05) as l:
+            if (not self.auth_token) or force:
+                response = requests.post(self.url, data={'access_token': access_token, })
+                if response.status_code == 200:
+                    # self.put_access_token(response.body.access_token)
 
-        return SUCCESS
+                    self.auth_token = response.json()['access_token']
+                    typer.secho(
+                        '\nLogin Successful',
+                        fg=typer.colors.GREEN,
+                    )
+                else:
+                    typer.secho(
+                        f'\nLogin failed with "{ERRORS[AUTHORIZATION_ERROR]}"',
+                        fg=typer.colors.RED,
+                    )
+
+            return SUCCESS
 
     def get_access_token(self) -> Optional[str]:
         self.auth_file = "/home/dps/.sentinel/ACCESS_TOKEN"
         ret = None
+        if self.auth_token:
+            return self.auth_token
         try:
             with open(self.auth_file, "r") as f:
                 return f.read().strip()
