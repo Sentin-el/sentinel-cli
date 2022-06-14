@@ -4,7 +4,8 @@ from requests_mock.mocker import Mocker
 from typer.testing import CliRunner
 
 from sentinel import __app_name__, __version__, cli, __host_url__
-
+from sentinel.utils.cron import add_to_crontab, EVEN_HOUR
+import os
 runner = CliRunner()
 
 
@@ -30,3 +31,4 @@ def test_authentication_login_failed_response(requests_mock: Mocker):
     })
     result = runner.invoke(cli.app, ['login', '--access-token', 'test_access_token'])
     assert not 'Successful' == result.stdout.strip().split(' ')[-1]
+
